@@ -1,7 +1,8 @@
 package scopt
 
-import java.net.UnknownHostException
-import java.text.ParseException
+// import java.net.UnknownHostException
+// import java.text.ParseException
+case class ParseException(message: String, errorOffset: Int) extends Exception(message)
 
 import collection.mutable.{ListBuffer, ListMap}
 
@@ -15,11 +16,11 @@ trait Read[A] { self =>
   }
 }
 object Read {
-  import java.util.{Locale, Calendar, GregorianCalendar}
+  import java.util.{Locale, Calendar} // GregorianCalendar
   import java.text.SimpleDateFormat
   import java.io.File
-  import java.net.URI
-  import java.net.InetAddress
+  //import java.net.URI
+  //import java.net.InetAddress
   import scala.concurrent.duration.Duration
   def reads[A](f: String => A): Read[A] = new Read[A] {
     val arity = 1
@@ -63,7 +64,7 @@ object Read {
   }
 
   implicit val bigDecimalRead: Read[BigDecimal] = reads { BigDecimal(_) }
-  implicit val yyyymmdddRead: Read[Calendar] = calendarRead("yyyy-MM-dd")
+  /*implicit val yyyymmdddRead: Read[Calendar] = calendarRead("yyyy-MM-dd")
   def calendarRead(pattern: String): Read[Calendar] = calendarRead(pattern, Locale.getDefault)
   def calendarRead(pattern: String, locale: Locale): Read[Calendar] =
     reads { s =>
@@ -71,10 +72,10 @@ object Read {
       val c = new GregorianCalendar
       c.setTime(fmt.parse(s))
       c
-    }
+    }*/
   implicit val fileRead: Read[File]           = reads { new File(_) }
-  implicit val uriRead: Read[URI]             = reads { new URI(_) }
-  implicit val inetAddress: Read[InetAddress] = reads { InetAddress.getByName(_) }
+  //implicit val uriRead: Read[URI]             = reads { new URI(_) }
+  //implicit val inetAddress: Read[InetAddress] = reads { InetAddress.getByName(_) }
   implicit val durationRead: Read[Duration]   =
     reads { try {
       Duration(_)
@@ -665,7 +666,7 @@ class OptionDef[A: Read, C](
       }
     } catch {
       case e: NumberFormatException => Left(Seq(shortDescription.capitalize + " expects a number but was given '" + arg + "'"))
-      case e: UnknownHostException  => Left(Seq(shortDescription.capitalize + " expects a host name or an IP address but was given '" + arg + "' which is invalid"))
+      //case e: UnknownHostException  => Left(Seq(shortDescription.capitalize + " expects a host name or an IP address but was given '" + arg + "' which is invalid"))
       case e: ParseException        => Left(Seq(shortDescription.capitalize + " expects a Scala duration but was given '" + arg + "'"))
       case e: Throwable             => Left(Seq(shortDescription.capitalize + " failed when given '" + arg + "'. " + e.getMessage))
     }
